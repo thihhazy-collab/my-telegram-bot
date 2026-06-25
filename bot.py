@@ -23,11 +23,10 @@ def send_welcome(message):
 @bot.message_handler(func=lambda message: True)
 def reply_all(message):
     try:
-        # လူက မေးလိုက်တဲ့စာကို AI ဆီ ပို့ပြီး အဖြေတောင်းခြင်း
-        response = model.generate_content(message.text)
-        bot.reply_to(message, response.text)
-    except Exception as e:
-        bot.reply_to(message, "ခဏလေးနော် အစ်ကို... လိုင်းနည်းနည်း ဟန်းသွားလို့ပါ။")
+        # လက်ရှိစာကြောင်းကို ဖျက်ပြီး ဒါလေးနဲ့ အစားထိုးပါ-
+response = model.generate_content(message.text)
+bot.reply_to(message, response.text)
+
 
 @app.route('/')
 def home():
