@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 # တိုကင်များနှင့် API Key သတ်မှတ်ခြင်း
 BOT_TOKEN = "8993816547:AAFFmltm2xL4Xm_8Z-Yp9K9K9K6vRE6mZxs"
-GEMINI_API_KEY = "AQ.Ab8RN6I0vFWrqs1Scnbd5GEfKsR"
+GEMINI_API_KEY = "AQ.Ab8RN6JlXN1jGJbNF0gxhNmVmH73yRIHVQ3-C99GaPM2gz-kCA"
 
 # AI နှင့် Bot ကို ချိတ်ဆက်ခြင်း
 genai.configure(api_key=GEMINI_API_KEY)
