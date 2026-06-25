@@ -7,7 +7,7 @@ import google.generativeai as genai
 app = Flask(__name__)
 
 # တိုကင်များနှင့် API Key သတ်မှတ်ခြင်း
-BOT_TOKEN = "8993816547:AAFFmltm2xL4Xm_8Z-Yp9K9K9K6vRE6mZxs"
+BOT_TOKEN = "8993816547:AAFFmltm2xLME_3iYg3VgvcNmVBxG4XG3rY"
 GEMINI_API_KEY = "AQ.Ab8RN6JlXN1jGJbNF0gxhNmVmH73yRIHVQ3-C99GaPM2gz-kCA"
 
 # AI နှင့် Bot ကို ချိတ်ဆက်ခြင်း
