@@ -13,7 +13,8 @@ GEMINI_API_KEY = "AQ.Ab8RN6JlXN1jGJbNF0gxhNmVmH73yRIHVQ3-C99GaPM2gz-kCA"
 # AI နှင့် Bot ကို ချိတ်ဆက်ခြင်း
 genai.configure(api_key=GEMINI_API_KEY)
 bot = telebot.TeleBot(BOT_TOKEN)
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-2.5-flash')
+
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
