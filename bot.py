@@ -1,45 +1,42 @@
 import os
 import telebot
 from flask import Flask
+import google.generativeai as genai
 
-# Flask app ဆောက်မယ် (Render Server ပေါ်မှာ နိုးနေအောင်လို့ပါ)
+# Flask Web Server ဆောက်ခြင်း (Render အတွက်)
 app = Flask(__name__)
 
-BOT_TOKEN = "8993816547:AAFFmltm2xLME_3iYg3VgvcNmVBxG4XG3rY"
+# တိုကင်များနှင့် API Key သတ်မှတ်ခြင်း
+BOT_TOKEN = "8993816547:AAFFmltm2xL4Xm_8Z-Yp9K9K9K6vRE6mZxs"
+GEMINI_API_KEY = "AQ.Ab8RN6I0vFWrqs1Scnbd5GEfKsR"
+
+# AI နှင့် Bot ကို ချိတ်ဆက်ခြင်း
+genai.configure(api_key=GEMINI_API_KEY)
 bot = telebot.TeleBot(BOT_TOKEN)
+model = genai.GenerativeModel('gemini-1.5-flash')
 
-replies = {
-    "ဟိုင်း": "မင်္ဂလာပါဗျာ။ ကျွန်တော်က ၂၄ နာရီပတ်လုံး အလုပ်လုပ်မယ့် Bot ဖြစ်ပါတယ်။ 🤖",
-    "hi": "Hello ဗျာ! မင်္ဂလာပါ၊ ဘာကူညီပေးရမလဲခင်ဗျာ။",
-    "hello": "Hello ဗျာ! မင်္ဂလာပါ၊ ဘာကူညီပေးရမလဲခင်ဗျာ။",
-    "မင်္ဂလာပါ": "မင်္ဂလာပါ အစ်ကိုရေ! နေကောင်းလားဗျာ။",
-    "နေကောင်းလား": "နေကောင်းပါတယ်ဗျာ။ အစ်ကိုရော နေကောင်းရဲ့လား။",
-    "ကျေးဇူးပဲ": "ရပါတယ်ဗျာ။ မလိုပါဘူး။",
-    "ဘယ်သူလဲ": "ကျွန်တော်က အစ်ကို့ရဲ့ Auto-Reply Bot လေး ပါဗျာ။ 😎"
-}
-
-@bot.message_handler(commands=["start"])
+@bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.reply_to(message, "မင်္ဂလာပါဗျာ။ ကျွန်တော်က အော်တိုစာပြန်ပေးမယ့် Bot ဖြစ်ပါတယ်။ စကားလှမ်းပြောကြည့်ပါဦး! 🤖")
+    bot.reply_to(message, "မင်္ဂလာပါဗျာ။ ကျွန်တော်ကတော့ အရာအားလုံးကို ဖြေကြားပေးနိုင်တဲ့ AI Bot ဖြစ်ပါတယ်။ သိချင်တာမှန်သမျှ လွတ်လပ်စွာ မေးမြန်းနိုင်ပါတယ်ခင်ဗျာ! 🧠✨")
 
 @bot.message_handler(func=lambda message: True)
-def handle_message(message):
-    user_text = message.text.lower().strip()
-    if user_text in replies:
-        bot.reply_to(message, replies[user_text])
-    else:
-        bot.reply_to(message, "အစ်ကိုပြောတဲ့စာကို ကျွန်တော် နားမလည်သေးလို့ပါဗျာ။ 🧠")
+def reply_all(message):
+    try:
+        # လူက မေးလိုက်တဲ့စာကို AI ဆီ ပို့ပြီး အဖြေတောင်းခြင်း
+        response = model.generate_content(message.text)
+        bot.reply_to(message, response.text)
+    except Exception as e:
+        bot.reply_to(message, "ခဏလေးနော် အစ်ကို... လိုင်းနည်းနည်း ဟန်းသွားလို့ပါ။")
 
 @app.route('/')
 def home():
-    return "Bot is running 24/7!"
+    return "Bot is running 24/7 with Gemini AI!"
 
 if __name__ == "__main__":
-    # နောက်ကွယ်မှာ Bot ကို နှိုးထားမယ်
     import threading
-    threading.Thread(target=bot.infinity_polling).start()
+    # Web server ကို နောက်ကွယ်ကပတ်ထားရန်
+    threading.Thread(target=lambda: app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))).start()
+    print("Bot is polling...")
+    bot.infinity_polling()
     
-    # Server Port ကို ဖွင့်မယ်
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
     
