@@ -6,14 +6,19 @@ import google.generativeai as genai
 # Flask Web Server ဆောက်ခြင်း (Render အတွက်)
 app = Flask(__name__)
 
-# တိုကင်များနှင့် API Key သတ်မှတ်ခြင်း
-BOT_TOKEN = "8993816547:AAFFmltm2xLME_3iYg3VgvcNmVBxG4XG3rY"  # <--- အစ်ကို့ရဲ့ Telegram Bot Token အမှန်ကြီးကို ဒီမျက်တောင်အဖွင့်အပိတ်ကြားထဲ ထည့်ပေးပါ
-GEMINI_API_KEY = "AQ.Ab8RN6LuYRcxqAKpxEPUprLYr4cYhSvACedlWpFE_T4xHau-lw"                  # <--- အစ်ကို့ရဲ့ Gemini API Key အမှန်ကြီးကို ဒီမျက်တောင်အဖွင့်အပိတ်ကြားထဲ ထည့်ပေးပါ
+# အစ်ကို့ရဲ့ တိုကင်နဲ့ ကီး အစစ်အမှန်များကို တစ်ခါတည်း သေသေချာချာ ထည့်ပေးထားပါတယ်ဗျာ
+BOT_TOKEN = "8993816547:AAFFmltm2xLME_3iYg3VgvcNmVBxG4XG3rY"
+GEMINI_API_KEY = "AQ.Ab8RN6LuYRcxqAKpxEPUprLYr4cYhSvACedlWpFE_T4xHau-lw"
 
 # AI နှင့် Bot ကို ချိတ်ဆက်ခြင်း
 genai.configure(api_key=GEMINI_API_KEY)
-bot = telebot.TeleBot(BOT_TOKEN)
-bot.remove_webhook()
+bot = telebot.TeleBot(BOT_TOKEN, threaded=False)
+
+try:
+    bot.remove_webhook()
+except Exception:
+    pass
+
 model = genai.GenerativeModel('gemini-2.5-flash')
 
 @bot.message_handler(commands=['start'])
@@ -23,7 +28,6 @@ def send_welcome(message):
 @bot.message_handler(func=lambda message: True)
 def reply_all(message):
     try:
-        # လူက မေးလိုက်တဲ့စာကို AI ဆီ ပို့ပြီး အဖြေတောင်းခြင်း
         response = model.generate_content(message.text)
         bot.reply_to(message, response.text)
     except Exception as e:
@@ -34,10 +38,12 @@ def home():
     return "Bot is Running!"
 
 if __name__ == '__main__':
-    # Render အတွက် Web Server ရော Bot ရော တွဲပတ်ခြင်း
     from threading import Thread
     def run_bot():
-        bot.infinity_polling()
+        try:
+            bot.infinity_polling(timeout=10, long_polling_timeout=5)
+        except Exception:
+            pass
     
     Thread(target=run_bot).start()
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
