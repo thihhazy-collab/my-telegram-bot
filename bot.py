@@ -7,9 +7,8 @@ import google.generativeai as genai
 app = Flask(__name__)
 
 # တိုကင်များနှင့် API Key သတ်မှတ်ခြင်း
-BOT_TOKEN = "
-8993816547:AAFFmltm2xLME_3iYg3VgvcNmVBxG4XG3rY"
-GEMINI_API_KEY = "AQ.Ab8RN6LuYRcxqAKpxEPUprLYr4cYhSvACedlWpFE_T4xHau-lw" # <--- အစ်ကို့ရဲ့ API Key အမှန်ကြီးကို ဒီနေရာမှာ ပြန်ထည့်ပေးပါနော်
+BOT_TOKEN = "8993816547:AAFFmltm2xLME_3iYg3VgvcNmVBxG4XG3rY"  # <--- အစ်ကို့ရဲ့ Telegram Bot Token အမှန်ကြီးကို ဒီမျက်တောင်အဖွင့်အပိတ်ကြားထဲ ထည့်ပေးပါ
+GEMINI_API_KEY = "AQ.Ab8RN6LuYRcxqAKpxEPUprLYr4cYhSvACedlWpFE_T4xHau-lw"                  # <--- အစ်ကို့ရဲ့ Gemini API Key အမှန်ကြီးကို ဒီမျက်တောင်အဖွင့်အပိတ်ကြားထဲ ထည့်ပေးပါ
 
 # AI နှင့် Bot ကို ချိတ်ဆက်ခြင်း
 genai.configure(api_key=GEMINI_API_KEY)
@@ -19,7 +18,7 @@ model = genai.GenerativeModel('gemini-2.5-flash')
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.reply_to(message, "မင်္ဂလာပါဗျာ။ ကျွန်တော်ကတော့ အရာအားလုံးကို ဖြေကြားပေးနိုင်တဲ့ AI Bot ဖြစ်ပါတယ်။ သီချင်းလည်း တောင်းလို့ရပါတယ် ခင်ဗျာ။")
+    bot.reply_to(message, "မင်္ဂလာပါဗျာ။ ကျွန်တော်ကတော့ အရာအားလုံးကို ဖြေကြားပေးနိုင်တဲ့ AI Bot ဖြစ်ပါတယ်။ ဘာမေးချင်လဲ မေးလို့ရပါပြီ ခင်ဗျာ။")
 
 @bot.message_handler(func=lambda message: True)
 def reply_all(message):
